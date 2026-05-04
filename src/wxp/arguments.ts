@@ -105,7 +105,8 @@ export function parseArguments(node: XmlNode, rawArguments: string, vars: Variab
     }
 
     if (type === "string" && isLast) {
-      vars.set(name, remaining.slice(tokenIdx).join(" "), undefined);
+      const nonFlags = remaining.slice(tokenIdx).filter((t) => !t.startsWith("--"));
+      vars.set(name, nonFlags.join(" "), undefined);
       tokenIdx = remaining.length;
     } else if (type === "number") {
       const raw = remaining[tokenIdx++];
