@@ -5,7 +5,7 @@
  * file at `gsd/references/model-profiles.md (pi) or get-shit-done/references/model-profiles.md (other harnesses)` is auto-generated from
  * this data via:
  *
- *   node dist/gsd-tools.js generate-model-profiles-md [--harness <name>]
+ *   node dist/pi-gsd-tools.js generate-model-profiles-md [--harness <name>]
  *
  * Do NOT edit `references/model-profiles.md` by hand - changes will be overwritten.
  */

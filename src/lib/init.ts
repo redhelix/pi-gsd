@@ -50,9 +50,7 @@ function withProjectRoot(
     result: Record<string, unknown>,
 ): Record<string, unknown> {
     result.project_root = cwd;
-    // For dist build: __dirname is dist/, gsd-tools.js is dist/gsd-tools.js
-    // Agents/ is at ../agents relative to dist/
-    result.gsd_bin = "dist/gsd-tools.js";
+    result.gsd_bin = "dist/pi-gsd-tools.js";
     result.gsd_root = ".";
     result.gsd_harness_dir = ".";
     const agentStatus = checkAgentsInstalled();
