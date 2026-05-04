@@ -768,8 +768,8 @@ export function cmdValidateHealth(
                 "W010",
                 agentStatus.installed_agents.length === 0
                     ? `No GSD agents found in ${agentStatus.agents_dir}`
-                    : `Missing ${agentStatus.missing_agents.length} GSD agents: ${agentStatus.missing_agents.join(", ")}`,
-                "Run the GSD installer: pi install npm:pi-gsd",
+                    : `Missing GSD agents: ${agentStatus.missing_agents.join(", ")}`,
+                `Agents should be in ~/.claude/agents/ — reinstall the GSD plugin`,
             );
     } catch {
         /* non-blocking */

@@ -376,3 +376,57 @@ export function cmdRoadmapUpdatePlanProgress(
 		`${summaryCount}/${planCount} ${status}`,
 	);
 }
+
+export function cmdRoadmapAddPhase(
+	cwd: string,
+	number: string | undefined,
+	text: string | undefined,
+	raw: boolean,
+): void {
+	if (!number?.trim()) gsdError("phase number required");
+	if (!/^\d+(\.\d+)*$/.test(number!.trim())) gsdError(`Invalid phase number format: "${number}" — expected e.g. "3" or "3.1"`);
+	if (!text?.trim()) gsdError("phase description required");
+	const roadmapPath = planningPaths(cwd).roadmap;
+	if (!fs.existsSync(roadmapPath)) {
+		output({ error: "ROADMAP.md not found" }, raw);
+		return;
+	}
+	let content = fs.readFileSync(roadmapPath, "utf-8");
+	const entry = `- [ ] **Phase ${number!.trim()}: ${text!.trim()}**`;
+	// Append inside current milestone block using replaceInCurrentMilestone
+	const appendRe = /(- \[[ x]\] \*\*Phase [^\n]+\*\*[^\n]*)\n(?!- \[)/;
+	const updated = replaceInCurrentMilestone(content, appendRe, `$1\n${entry}\n`);
+	if (updated === content) {
+		// No existing checklist entry to anchor after — append at end of milestone block
+		content = content.trimEnd() + "\n" + entry + "\n";
+	} else {
+		content = updated;
+	}
+	fs.writeFileSync(roadmapPath, content, "utf-8");
+	output({ added: true, number: number!.trim(), text: text!.trim() }, raw, `Added Phase ${number!.trim()}`);
+}
+
+export function cmdRoadmapRemovePhase(
+	cwd: string,
+	number: string | undefined,
+	raw: boolean,
+): void {
+	if (!number?.trim()) gsdError("phase number required");
+	const roadmapPath = planningPaths(cwd).roadmap;
+	if (!fs.existsSync(roadmapPath)) {
+		output({ error: "ROADMAP.md not found" }, raw);
+		return;
+	}
+	let content = fs.readFileSync(roadmapPath, "utf-8");
+	const escaped = escapeRegex(number!.trim());
+	const checklistRe = new RegExp(`^- \\[[ x]\\] \\*\\*Phase ${escaped}:[^\\n]*\\*\\*[^\\n]*\\n?`, "im");
+	if (!checklistRe.test(content)) {
+		output({ removed: false, error: `Phase ${number} not found in ROADMAP.md` }, raw, "not found");
+		return;
+	}
+	content = content.replace(checklistRe, "");
+	const headerRe = new RegExp(`^#{2,4}\\s*Phase\\s+${escaped}:[^\\n]*\\n`, "im");
+	content = content.replace(headerRe, "");
+	fs.writeFileSync(roadmapPath, content, "utf-8");
+	output({ removed: true, number: number!.trim() }, raw, `Removed Phase ${number!.trim()}`);
+}

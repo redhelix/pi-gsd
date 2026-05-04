@@ -975,7 +975,10 @@ export function getRoadmapPhaseInternal(
 // ─── Agent installation validation ───────────────────────────────────────────
 
 export function getAgentsDir(): string {
-	// dist/gsd-tools.js lives at repo root → agents/ is at ../../agents relative to __dirname
+	// Prefer ~/.claude/agents (where Claude Code installs GSD agents)
+	const claudeAgents = path.join(os.homedir(), ".claude", "agents");
+	if (fs.existsSync(claudeAgents)) return claudeAgents;
+	// Fallback: local agents/ dir relative to repo root
 	return path.join(__dirname, "..", "..", "agents");
 }
 

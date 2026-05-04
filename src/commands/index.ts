@@ -8,6 +8,15 @@ export {
   StateLoadCommand,
   StateUpdateProgressCommand,
   StateReconcileCommand,
+  StateRecordSessionCommand,
+  StateRecordMetricCommand,
+  StateAddDecisionCommand,
+  StateAddBlockerCommand,
+  StateBeginPhaseCommand,
+  StateNoteCommand,
+  StateResolveBlockerCommand,
+  StateSignalWaitingCommand,
+  StateSignalResumeCommand,
 } from "./state.js";
 
 export { InitCommand } from "./init.js";
@@ -16,6 +25,8 @@ export {
   RoadmapAnalyzeCommand,
   RoadmapGetPhaseCommand,
   RoadmapUpdatePlanProgressCommand,
+  RoadmapAddPhaseCommand,
+  RoadmapRemovePhaseCommand,
 } from "./roadmap.js";
 
 export {
@@ -44,6 +55,10 @@ export {
   ValidateAgentsCommand,
   VerifyCommand,
   AuditUatCommand,
+  VerifyArtifactsCommand,
+  VerifyKeyLinksCommand,
+  VerifyPhaseCompletenessCommand,
+  VerifyReferencesCommand,
 } from "./verify.js";
 
 export {
@@ -63,6 +78,7 @@ export {
   FrontmatterGetCommand,
   FrontmatterSetCommand,
   FrontmatterMergeCommand,
+  FrontmatterValidateCommand,
 } from "./frontmatter.js";
 
 export { TemplateSelectCommand, TemplateFillCommand } from "./template.js";

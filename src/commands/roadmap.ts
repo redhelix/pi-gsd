@@ -38,3 +38,32 @@ export class RoadmapUpdatePlanProgressCommand extends BaseCommand {
     roadmap.cmdRoadmapUpdatePlanProgress(cwd, args.phase, raw);
   }
 }
+
+export class RoadmapAddPhaseCommand extends BaseCommand {
+  static override description = "Append a phase entry to ROADMAP.md";
+  static override args = {
+    number: Args.string({ required: true }),
+    text: Args.string({ required: true }),
+  };
+  static override flags = { ...BaseCommand.baseFlags };
+
+  async run() {
+    const { flags, args } = await this.parse(RoadmapAddPhaseCommand);
+    const { cwd, raw } = this.resolveContext(flags);
+    const roadmap = await import("../lib/roadmap.js");
+    roadmap.cmdRoadmapAddPhase(cwd, args.number, args.text, raw);
+  }
+}
+
+export class RoadmapRemovePhaseCommand extends BaseCommand {
+  static override description = "Remove a phase entry from ROADMAP.md";
+  static override args = { number: Args.string({ required: true }) };
+  static override flags = { ...BaseCommand.baseFlags };
+
+  async run() {
+    const { flags, args } = await this.parse(RoadmapRemovePhaseCommand);
+    const { cwd, raw } = this.resolveContext(flags);
+    const roadmap = await import("../lib/roadmap.js");
+    roadmap.cmdRoadmapRemovePhase(cwd, args.number, raw);
+  }
+}
