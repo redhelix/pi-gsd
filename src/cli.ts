@@ -32,6 +32,11 @@ async function buildCommandMap(): Promise<Record<string, CommandConstructor>> {
     StateLoadCommand,
     StateUpdateProgressCommand,
     StateReconcileCommand,
+    StateRecordSessionCommand,
+    StateRecordMetricCommand,
+    StateAddDecisionCommand,
+    StateAddBlockerCommand,
+    StateBeginPhaseCommand,
     InitCommand,
     RoadmapAnalyzeCommand,
     RoadmapGetPhaseCommand,
@@ -87,6 +92,11 @@ async function buildCommandMap(): Promise<Record<string, CommandConstructor>> {
     "state load": StateLoadCommand as unknown as CommandConstructor,
     "state update-progress": StateUpdateProgressCommand as unknown as CommandConstructor,
     "state reconcile": StateReconcileCommand as unknown as CommandConstructor,
+    "state record-session": StateRecordSessionCommand as unknown as CommandConstructor,
+    "state record-metric": StateRecordMetricCommand as unknown as CommandConstructor,
+    "state add-decision": StateAddDecisionCommand as unknown as CommandConstructor,
+    "state add-blocker": StateAddBlockerCommand as unknown as CommandConstructor,
+    "state begin-phase": StateBeginPhaseCommand as unknown as CommandConstructor,
     // init
     "init": InitCommand as unknown as CommandConstructor,
     // roadmap

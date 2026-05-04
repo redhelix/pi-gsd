@@ -8,6 +8,11 @@ export {
   StateLoadCommand,
   StateUpdateProgressCommand,
   StateReconcileCommand,
+  StateRecordSessionCommand,
+  StateRecordMetricCommand,
+  StateAddDecisionCommand,
+  StateAddBlockerCommand,
+  StateBeginPhaseCommand,
 } from "./state.js";
 
 export { InitCommand } from "./init.js";

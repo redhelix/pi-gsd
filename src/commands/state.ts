@@ -112,3 +112,118 @@ export class StateReconcileCommand extends BaseCommand {
     state.cmdStateReconcile(cwd, raw);
   }
 }
+
+export class StateRecordSessionCommand extends BaseCommand {
+  static override description = "Update last session timestamp and stopped-at note";
+  static override args = { stopped_at: Args.string({ required: false }) };
+  static override flags = {
+    ...BaseCommand.baseFlags,
+    "resume-file": Flags.string({ description: "Path to resume file" }),
+  };
+
+  async run() {
+    const { flags, args } = await this.parse(StateRecordSessionCommand);
+    const { cwd, raw } = this.resolveContext(flags);
+    const state = await import("../lib/state.js");
+    state.cmdStateRecordSession(
+      cwd,
+      { stopped_at: args.stopped_at ?? null, resume_file: flags["resume-file"] ?? null },
+      raw,
+    );
+  }
+}
+
+export class StateRecordMetricCommand extends BaseCommand {
+  static override description = "Append a performance metric row to STATE.md";
+  static override flags = {
+    ...BaseCommand.baseFlags,
+    phase: Flags.string({ required: true }),
+    plan: Flags.string({ required: true }),
+    duration: Flags.string({ required: true }),
+    tasks: Flags.string({ required: false }),
+    files: Flags.string({ required: false }),
+  };
+
+  async run() {
+    const { flags } = await this.parse(StateRecordMetricCommand);
+    const { cwd, raw } = this.resolveContext(flags);
+    const state = await import("../lib/state.js");
+    state.cmdStateRecordMetric(
+      cwd,
+      { phase: flags.phase, plan: flags.plan, duration: flags.duration, tasks: flags.tasks ?? null, files: flags.files ?? null },
+      raw,
+    );
+  }
+}
+
+export class StateAddDecisionCommand extends BaseCommand {
+  static override description = "Append a decision to STATE.md Decisions section";
+  static override flags = {
+    ...BaseCommand.baseFlags,
+    phase: Flags.string({ required: false }),
+    summary: Flags.string({ required: false }),
+    "summary-file": Flags.string({ required: false }),
+    rationale: Flags.string({ required: false }),
+    "rationale-file": Flags.string({ required: false }),
+  };
+
+  async run() {
+    const { flags } = await this.parse(StateAddDecisionCommand);
+    const { cwd, raw } = this.resolveContext(flags);
+    const state = await import("../lib/state.js");
+    state.cmdStateAddDecision(
+      cwd,
+      {
+        phase: flags.phase ?? null,
+        summary: flags.summary ?? null,
+        summary_file: flags["summary-file"] ?? null,
+        rationale: flags.rationale ?? null,
+        rationale_file: flags["rationale-file"] ?? null,
+      },
+      raw,
+    );
+  }
+}
+
+export class StateAddBlockerCommand extends BaseCommand {
+  static override description = "Append a blocker to STATE.md Blockers section";
+  static override args = { text: Args.string({ required: false }) };
+  static override flags = {
+    ...BaseCommand.baseFlags,
+    "text-file": Flags.string({ description: "Read blocker text from file" }),
+  };
+
+  async run() {
+    const { flags, args } = await this.parse(StateAddBlockerCommand);
+    const { cwd, raw } = this.resolveContext(flags);
+    const state = await import("../lib/state.js");
+    state.cmdStateAddBlocker(
+      cwd,
+      { text: args.text ?? null, text_file: flags["text-file"] ?? null },
+      raw,
+    );
+  }
+}
+
+export class StateBeginPhaseCommand extends BaseCommand {
+  static override description = "Initialize STATE.md for a new phase";
+  static override flags = {
+    ...BaseCommand.baseFlags,
+    phase: Flags.string({ required: true }),
+    name: Flags.string({ required: false }),
+    plans: Flags.integer({ required: false }),
+  };
+
+  async run() {
+    const { flags } = await this.parse(StateBeginPhaseCommand);
+    const { cwd, raw } = this.resolveContext(flags);
+    const state = await import("../lib/state.js");
+    state.cmdStateBeginPhase(
+      cwd,
+      flags.phase,
+      flags.name ?? null,
+      flags.plans ?? null,
+      raw,
+    );
+  }
+}
