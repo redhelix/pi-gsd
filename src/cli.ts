@@ -37,10 +37,16 @@ async function buildCommandMap(): Promise<Record<string, CommandConstructor>> {
     StateAddDecisionCommand,
     StateAddBlockerCommand,
     StateBeginPhaseCommand,
+    StateNoteCommand,
+    StateResolveBlockerCommand,
+    StateSignalWaitingCommand,
+    StateSignalResumeCommand,
     InitCommand,
     RoadmapAnalyzeCommand,
     RoadmapGetPhaseCommand,
     RoadmapUpdatePlanProgressCommand,
+    RoadmapAddPhaseCommand,
+    RoadmapRemovePhaseCommand,
     ConfigGetCommand,
     ConfigSetCommand,
     ConfigSetModelProfileCommand,
@@ -60,6 +66,10 @@ async function buildCommandMap(): Promise<Record<string, CommandConstructor>> {
     ValidateAgentsCommand,
     VerifyCommand,
     AuditUatCommand,
+    VerifyArtifactsCommand,
+    VerifyKeyLinksCommand,
+    VerifyPhaseCompletenessCommand,
+    VerifyReferencesCommand,
     WorkstreamCreateCommand,
     WorkstreamListCommand,
     WorkstreamStatusCommand,
@@ -72,6 +82,7 @@ async function buildCommandMap(): Promise<Record<string, CommandConstructor>> {
     FrontmatterGetCommand,
     FrontmatterSetCommand,
     FrontmatterMergeCommand,
+    FrontmatterValidateCommand,
     TemplateSelectCommand,
     TemplateFillCommand,
     ProgressCommand,
@@ -97,12 +108,18 @@ async function buildCommandMap(): Promise<Record<string, CommandConstructor>> {
     "state add-decision": StateAddDecisionCommand as unknown as CommandConstructor,
     "state add-blocker": StateAddBlockerCommand as unknown as CommandConstructor,
     "state begin-phase": StateBeginPhaseCommand as unknown as CommandConstructor,
+    "state note": StateNoteCommand as unknown as CommandConstructor,
+    "state resolve-blocker": StateResolveBlockerCommand as unknown as CommandConstructor,
+    "state signal-waiting": StateSignalWaitingCommand as unknown as CommandConstructor,
+    "state signal-resume": StateSignalResumeCommand as unknown as CommandConstructor,
     // init
     "init": InitCommand as unknown as CommandConstructor,
     // roadmap
     "roadmap analyze": RoadmapAnalyzeCommand as unknown as CommandConstructor,
     "roadmap get-phase": RoadmapGetPhaseCommand as unknown as CommandConstructor,
     "roadmap update-plan-progress": RoadmapUpdatePlanProgressCommand as unknown as CommandConstructor,
+    "roadmap add-phase": RoadmapAddPhaseCommand as unknown as CommandConstructor,
+    "roadmap remove-phase": RoadmapRemovePhaseCommand as unknown as CommandConstructor,
     // config
     "config-get": ConfigGetCommand as unknown as CommandConstructor,
     "config-set": ConfigSetCommand as unknown as CommandConstructor,
@@ -125,6 +142,10 @@ async function buildCommandMap(): Promise<Record<string, CommandConstructor>> {
     "validate health": ValidateHealthCommand as unknown as CommandConstructor,
     "validate agents": ValidateAgentsCommand as unknown as CommandConstructor,
     "verify": VerifyCommand as unknown as CommandConstructor,
+    "verify artifacts": VerifyArtifactsCommand as unknown as CommandConstructor,
+    "verify key-links": VerifyKeyLinksCommand as unknown as CommandConstructor,
+    "verify phase-completeness": VerifyPhaseCompletenessCommand as unknown as CommandConstructor,
+    "verify references": VerifyReferencesCommand as unknown as CommandConstructor,
     "audit-uat": AuditUatCommand as unknown as CommandConstructor,
     // workstream
     "workstream create": WorkstreamCreateCommand as unknown as CommandConstructor,
@@ -142,6 +163,7 @@ async function buildCommandMap(): Promise<Record<string, CommandConstructor>> {
     "frontmatter get": FrontmatterGetCommand as unknown as CommandConstructor,
     "frontmatter set": FrontmatterSetCommand as unknown as CommandConstructor,
     "frontmatter merge": FrontmatterMergeCommand as unknown as CommandConstructor,
+    "frontmatter validate": FrontmatterValidateCommand as unknown as CommandConstructor,
     // template
     "template select": TemplateSelectCommand as unknown as CommandConstructor,
     "template fill": TemplateFillCommand as unknown as CommandConstructor,
@@ -461,7 +483,7 @@ async function runLegacyCommand(
     }
     case "verify-summary": {
       const { cmdVerifySummary } = await import("./lib/verify.js");
-      const checkCount = args[2] ? parseInt(args[2], 10) : 2;
+      const checkCount = args[2] !== undefined ? parseInt(args[2], 10) : 2;
       cmdVerifySummary(cwd, args[1], checkCount, raw);
       break;
     }

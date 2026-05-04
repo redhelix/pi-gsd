@@ -49,3 +49,19 @@ export class FrontmatterMergeCommand extends BaseCommand {
     fm.cmdFrontmatterMerge(cwd, args.file, flags.data, raw);
   }
 }
+
+export class FrontmatterValidateCommand extends BaseCommand {
+  static override description = "Validate frontmatter against a named schema";
+  static override args = { file: Args.string({ required: true }) };
+  static override flags = {
+    ...BaseCommand.baseFlags,
+    schema: Flags.string({ description: "Schema name", required: true }),
+  };
+
+  async run() {
+    const { flags, args } = await this.parse(FrontmatterValidateCommand);
+    const { cwd, raw } = this.resolveContext(flags);
+    const fm = await import("../lib/frontmatter.js");
+    fm.cmdFrontmatterValidate(cwd, args.file, flags.schema, raw);
+  }
+}
